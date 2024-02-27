@@ -16,18 +16,46 @@ function decodeXor(input) {
 
 function iframeLoad() {
   if (document.readyState === 'complete') {
-    const website = iframe.contentWindow?.location.href.replace(window.location.origin, '');
+    const website = iframe.contentWindow?.location.href.replace(window.location.origin, '')
     if (website.includes('/y/') || website.includes('/f/')) {
-      document.getElementById('is').value = window.location.origin + website;
+      document.getElementById('is').value = window.location.origin + website
     } else {
       const website = iframe.contentWindow?.location.href.replace(window.location.origin, '').replace('/a/', '')
-      document.getElementById('is').value = decodeXor(website)    }
+      document.getElementById('is').value = decodeXor(website)
+    }
   }
 }
 
 function reload() {
   if (iframe) {
     iframe.src = iframe.src
+  }
+}
+
+function popout() {
+  const newWindow = window.open('about:blank', '_blank')
+
+  if (newWindow) {
+    const name = localStorage.getItem('name') || 'My Drive - Google Drive'
+    const icon = localStorage.getItem('icon') || 'https://ssl.gstatic.com/docs/doclist/images/drive_2022q3_32dp.png'
+
+    newWindow.document.title = name
+
+    const link = newWindow.document.createElement('link')
+    link.rel = 'icon'
+    link.href = encodeURI(icon)
+    newWindow.document.head.appendChild(link)
+
+    const newIframe = newWindow.document.createElement('iframe')
+    const style = newIframe.style
+    style.position = 'fixed'
+    style.top = style.bottom = style.left = style.right = 0
+    style.border = style.outline = 'none'
+    style.width = style.height = '100%'
+
+    newIframe.src = iframe.src
+
+    newWindow.document.body.appendChild(newIframe)
   }
 }
 
